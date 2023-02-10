@@ -101,3 +101,19 @@ func (h *Handler) DeleteEmployee(c *gin.Context) {
 
 	c.String(http.StatusOK, "employee deleted")
 }
+
+func (h *Handler) GetAllEmployees(c *gin.Context) {
+	type entry struct {
+		ID   int      `json:"id"`
+		Data Employee `json:"data"`
+	}
+	response := []entry{}
+	for i := 1; ; i++ {
+		emp, err := h.storage.Get(i)
+		if err != nil {
+			break
+		}
+		response = append(response, entry{ID: i, Data: emp})
+	}
+	c.JSON(http.StatusOK, response)
+}
